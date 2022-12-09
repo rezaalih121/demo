@@ -20,6 +20,7 @@ public class CompetenceController {
     }
 
     @GetMapping("/competence-list")
+    @JsonView(ViewCompetence.class)
     public ResponseEntity<List<Competence>> getCompetences(){
        return ResponseEntity.ok(competenceService.getCompetences());
     }
@@ -30,7 +31,7 @@ public class CompetenceController {
         return competenceService.getCompetenceById(id);
     }
 
-    @GetMapping("/competence/{nom}")
+    @GetMapping("/competence-byname/{nom}")
     public ResponseEntity<Competence> getCompetence(@PathVariable String nom){
         return competenceService.getCompetenceByNom(nom);
     }
