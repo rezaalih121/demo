@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <header>
+        <!-- place navbar here -->
+    </header>
+    <main>
+
+        <ul id="list-user">
+
+        </ul>
+
+        <form onsubmit="return addUser()">
+
+            <input type="text" id="firstname">
+            <input type="text" id="lastname">
+            <input type="submit" name="submit" value="Add User">
+
+
+        </form>
+
+    </main>
+    <footer>
+        <!-- place footer here -->
+    </footer>
+
+    <script>
+
+        function addUser() {
+
+            const user = {
+                firstname: document.getElementById("firstname").value,
+                lastname: document.getElementById("lastname").value
+            }
+
+            fetch("http://localhost:8080/user", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            }).then(result => {
+                const li = document.createElement("li");
+                const ul = document.getElementById("list-user");
+                li.innerHTML = "<li> Id : " + user.id + " FirstName : " + user.firstname + " Lastname : " + user.lastname + " </li>";
+                const deleteBtn = document.createElement("button");
+                deleteBtn.innerHTML = 'X';
+                li.appendChild(deleteBtn);
+
+
+                deleteBtn.addEventListener("click", e => {
+                    fetch("http://localhost:8080/user/" + user.id, { method: "DELETE" })
+                        .then(result => ul.removeChild(li));
+
+                })
+                console.log(result);
+
+                ul.appendChild(li);
+
+            });
+
+            return false;
+        }
+        console.log("debut");
+
+        fetch("http://localhost:8080/user-list")
+            .then(result => result.json())
+            .then(listUser => {
+                const ul = document.getElementById("list-user");
+                listUser.forEach(user => {
+
+                    const li = document.createElement('li');
+                    li.innerHTML = "<li> Id : " + user.id + " FirstName : " + user.firstname + " Lastname : " + user.lastname + " </li>";
+
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.innerHTML = 'X';
+                    li.appendChild(deleteBtn);
+
+                    deleteBtn.addEventListener("click", e => {
+                        fetch("http://localhost:8080/user/" + user.id, { method: "DELETE" })
+                            .then(result => ul.removeChild(li));
+
+                    })
+
+                    ul.appendChild(li);
+                })
+
+            });
+
+        console.log("fin");
+    </script>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>
